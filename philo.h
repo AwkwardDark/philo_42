@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 16:45:28 by pajimene          #+#    #+#             */
-/*   Updated: 2024/06/26 19:55:52 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:17:36 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep>\n\n"
 # define SYNTAX_ERR "\nThere's a syntax error, please enter only natural\
  numbers (miliseconds)\n\n"
+# define DATA_ERR "\nThere's a data error, nb_philosopher must be greater\
+ than 0, and all times greater or equal to 60 microseconds\n\n"
 
 typedef struct s_philo t_philo;
 
