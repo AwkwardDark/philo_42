@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 16:45:28 by pajimene          #+#    #+#             */
-/*   Updated: 2024/06/27 17:17:36 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/24 21:27:31 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,40 +22,74 @@
 # include <sys/time.h>
 
 # define ARG_ERR "\nWrong input, format must be: ./philo \
-<number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep>\n\n"
+<number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep>\
+ [<nb_of_meals>]\n\n"
 # define SYNTAX_ERR "\nThere's a syntax error, please enter only natural\
- numbers (miliseconds)\n\n"
-# define DATA_ERR "\nThere's a data error, nb_philosopher must be greater\
- than 0, and all times greater or equal to 60 microseconds\n\n"
+ numbers\n\n"
+# define DATA_ERR "\nThere's a data error, number of philos must be between\
+ 1 and 200, and the number of meals and all times (in ms) greater than 0\n\n"
+# define MALL_ERR "\nThere's a memory allocation error!\n\n"
+# define MUTEX_ERR_1 "\nThere's a mutex allocation error!\n\n"
+# define MUTEX_ERR_2 "\nThere's a mutex destruction error!\n\n"
+# define THREAD_ERR_1 "\nThere's a thread allocation error!\n\n"
+# define THREAD_ERR_2 "\nThere's a thread join error!\n\n"
 
-typedef struct s_philo t_philo;
+typedef struct s_philo	t_philo;
 
-typedef struct s_fork{
-	int				id;
-	pthread_mutex_t	mutex;
-}		t_fork;
-
+/*Data struct is shared between all philosophers and it's used to monitor them
+It has all the mutex, and the array of philos and forks (mutexes)*/
 typedef struct s_data{
-	int		number;
-	long	time_die;
-	long	time_eat;
-	long	time_sleep;
-	long	start_simulation_time;
-	bool	end_simulation;
-	t_fork	*forks;
-	t_philo	*philos;
+	int				ph_nb;
+	int				meal_nb;
+	long			t_die;
+	long			t_eat;
+	long			t_sleep;
+	long			t_start;
+	int				is_dead;
+	int				is_finished;
+	pthread_mutex_t	*forks;
+	t_philo			*ph;
+	pthread_mutex_t	write;
+	pthread_mutex_t	meal;
+	pthread_mutex_t	dead;
 }		t_data;
 
+/*Each philo is a single thread, which points to the data struct also*/
 typedef struct s_philo{
-	int			id;
-	pthread_t	thread_id;
-	t_fork		*left_fork;
-	t_fork		*right_fork;
-	long		last_meal_time;
+	pthread_t	thread;
 	t_data		*data;
+	int			id;
+	int			r_fork;
+	int			l_fork;
+	int			meals_eaten;
+	long		t_last_meal;
 }		t_philo;
 
-//Cheking Errors and Parsing
-int	ft_parse_input(t_data *data, char **av);
+/*Cheking Errors, Parsing & Initialazing*/
+int				ft_data_init(t_data *data, char **av);
+int				ft_philo_init(t_data *data);
+
+/*Threads, Mutex and Free fonctions*/
+int				ft_init_mutex_data(t_data *data);
+int				ft_clear_mutex(t_data *data);
+
+/*Simulation, Monitor and Supervisor*/
+int				ft_simulation(t_data *data);
+void			ft_monitor(t_data *data, t_philo *ph);
+void 			*ft_routine(void *arg);
+void			ft_one_philo(t_data *data, t_philo *ph);
+
+
+/*Actions*/
+void			ft_display(t_data *data, t_philo *ph, char c);
+void			ft_eat(t_data *data, t_philo *ph);
+int 			ft_is_dead(t_data *data);
+void			ft_set_death(t_data *data, t_philo *ph);
+
+/*Utils*/
+long			ft_get_time(void);
+void			ft_usleep(long time);
+long			ft_atol(char *str);
+int				ft_check_syntax(char *str);
 
 #endif
