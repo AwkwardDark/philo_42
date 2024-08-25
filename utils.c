@@ -6,12 +6,13 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 14:46:51 by pajimene          #+#    #+#             */
-/*   Updated: 2024/08/24 21:26:32 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/25 12:54:03 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/*Uses gettimeofday() and the timeval struct to calculate the time in ms*/
 long	ft_get_time(void)
 {
 	struct timeval	tv;
@@ -30,6 +31,7 @@ void	ft_usleep(long time)
 	while ((ft_get_time() - start_time) < time)
 		usleep(time / 10);
 }
+
 /*Used for parsing the arguments*/
 long	ft_atol(char *str)
 {
@@ -56,6 +58,7 @@ long	ft_atol(char *str)
 	}
 	return (nbr * sign);
 }
+
 /*Use for the error management*/
 int	ft_check_syntax(char *str)
 {

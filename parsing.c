@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 14:46:58 by pajimene          #+#    #+#             */
-/*   Updated: 2024/08/24 20:59:59 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:04:01 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ int	ft_data_init(t_data *data, char **av)
 	data->t_eat = ft_atol(av[3]);
 	data->t_sleep = ft_atol(av[4]);
 	data->meal_nb = -1;
+	data->is_dead = 0;
+	data->is_finished = 0;
 	if (av[5])
 		data->meal_nb = ft_atol(av[5]);
-	if (data->ph_nb > 200 || data->ph_nb == 0 || data->meal_nb == 0 \
-	|| data->t_die == 0 || data->t_eat == 0 || data->t_sleep == 0)
+	if (data->ph_nb > 200 || data->ph_nb == 0 || data->meal_nb == 0
+		|| data->t_die == 0 || data->t_eat == 0 || data->t_sleep == 0)
 		return (printf(DATA_ERR), 1);
 	if (ft_init_mutex_data(data))
 		return (1);
@@ -58,6 +60,8 @@ int	ft_init_mutex_data(t_data *data)
 	if (pthread_mutex_init(&data->meal, NULL) != 0)
 		return (printf(MUTEX_ERR_1), 1);
 	if (pthread_mutex_init(&data->dead, NULL) != 0)
+		return (printf(MUTEX_ERR_1), 1);
+	if (pthread_mutex_init(&data->monitor, NULL) != 0)
 		return (printf(MUTEX_ERR_1), 1);
 	return (0);
 }

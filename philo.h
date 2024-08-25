@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 16:45:28 by pajimene          #+#    #+#             */
-/*   Updated: 2024/08/24 21:27:31 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/25 17:52:16 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,12 @@ typedef struct s_data{
 	long			t_start;
 	int				is_dead;
 	int				is_finished;
-	pthread_mutex_t	*forks;
 	t_philo			*ph;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
 	pthread_mutex_t	meal;
 	pthread_mutex_t	dead;
+	pthread_mutex_t	monitor;
 }		t_data;
 
 /*Each philo is a single thread, which points to the data struct also*/
@@ -76,15 +77,17 @@ int				ft_clear_mutex(t_data *data);
 /*Simulation, Monitor and Supervisor*/
 int				ft_simulation(t_data *data);
 void			ft_monitor(t_data *data, t_philo *ph);
-void 			*ft_routine(void *arg);
+void			*ft_routine(void *arg);
 void			ft_one_philo(t_data *data, t_philo *ph);
-
 
 /*Actions*/
 void			ft_display(t_data *data, t_philo *ph, char c);
 void			ft_eat(t_data *data, t_philo *ph);
-int 			ft_is_dead(t_data *data);
+int				ft_is_dead(t_data *data);
 void			ft_set_death(t_data *data, t_philo *ph);
+int				ft_is_finished(t_data *data);
+int				ft_meal_counter(t_data *data, t_philo ph);
+void			ft_set_end(t_data *data, t_philo *ph);
 
 /*Utils*/
 long			ft_get_time(void);

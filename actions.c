@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:39:40 by pajimene          #+#    #+#             */
-/*   Updated: 2024/08/24 21:25:35 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:39:30 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,26 @@
 void	ft_display(t_data *data, t_philo *ph, char c)
 {
 	long	time;
-	
+
 	pthread_mutex_lock(&data->write);
 	time = ft_get_time() - data->t_start;
-	if (!ft_is_dead(data))
+	if (!ft_is_finished(data))
 	{
-		if (c == 'F')
-			printf("%ld %d has taken a fork\n", time, ph->id);
-		if (c == 'E')
-			printf("%ld %d is eating\n", time, ph->id);
-		if (c == 'S')
-			printf("%ld %d is sleeping\n", time, ph->id);
-		if (c == 'T')
-			printf("%ld %d is thinking\n", time, ph->id);
-		if (c == 'D')
-			printf("%ld %d died\n", time, ph->id);
+		if (!ft_is_dead(data))
+		{
+			if (c == 'F')
+				printf("%ld %d has taken a fork\n", time, ph->id);
+			if (c == 'E')
+				printf("%ld %d is eating\n", time, ph->id);
+			if (c == 'S')
+				printf("%ld %d is sleeping\n", time, ph->id);
+			if (c == 'T')
+				printf("%ld %d is thinking\n", time, ph->id);
+			if (c == 'D')
+				printf("%ld %d died\n", time, ph->id);
+			if (c == 'X')
+				printf("%ld everyone have finished their meal !\n", time);
+		}
 	}
 	pthread_mutex_unlock(&data->write);
 }
@@ -61,22 +66,4 @@ void	ft_eat(t_data *data, t_philo *ph)
 	ft_usleep(data->t_eat);
 	pthread_mutex_unlock(&data->forks[ph->l_fork]);
 	pthread_mutex_unlock(&data->forks[ph->r_fork]);
-}
-
-int ft_is_dead(t_data *data)
-{
-	int	val;
-	
-	pthread_mutex_lock(&data->dead);
-	val = data->is_dead;
-	pthread_mutex_unlock(&data->dead);
-	return (val);
-}
-
-void	ft_set_death(t_data *data, t_philo *ph)
-{
-	pthread_mutex_lock(&data->dead);
-	data->is_dead = 1;
-	ft_display(data, ph, 'D');
-	pthread_mutex_unlock(&data->dead);
 }

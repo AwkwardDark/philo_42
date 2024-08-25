@@ -6,7 +6,7 @@
 #    By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 13:05:27 by pajimene          #+#    #+#              #
-#    Updated: 2024/08/24 19:07:30 by pajimene         ###   ########.fr        #
+#    Updated: 2024/08/25 21:29:08 by pajimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,12 @@ CC 		= 	cc
 
 CFLAGS 	= 	-Wall -Wextra -Werror -g3
 
-SRC 	= 	 philo.c \
-			parsing.c
+SRC 	= 	main.c \
+			parsing.c \
+			utils.c \
+			simulation.c \
+			actions.c \
+			get_data.c
 
 OBJ		= 	$(SRC:.c=.o)
 
