@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 15:00:00 by pajimene          #+#    #+#             */
-/*   Updated: 2024/08/25 21:36:27 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/27 10:07:20 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,14 @@ void	*ft_routine(void *arg)
 	if (data->ph_nb == 1)
 		return (ft_one_philo(data, ph), NULL);
 	if (ph->id % 2 == 0)
-		ft_usleep(15);
+		ft_usleep(15, data);
 	while (!ft_is_dead(data))
 	{
 		ft_eat(data, ph);
 		if (ft_is_finished(data))
 			break ;
 		ft_display(data, ph, 'S');
-		ft_usleep(data->t_sleep);
+		ft_usleep(data->t_sleep, data);
 		ft_display(data, ph, 'T');
 		usleep(100);
 	}
@@ -102,7 +102,7 @@ void	ft_one_philo(t_data *data, t_philo *ph)
 	pthread_mutex_lock(&data->forks[ph->r_fork]);
 	ft_display(data, ph, 'F');
 	pthread_mutex_unlock(&data->forks[ph->r_fork]);
-	ft_usleep(data->t_die);
+	ft_usleep(data->t_die, data);
 	ft_display(data, ph, 'D');
 }
 

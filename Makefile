@@ -6,7 +6,7 @@
 #    By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 13:05:27 by pajimene          #+#    #+#              #
-#    Updated: 2024/08/25 21:29:08 by pajimene         ###   ########.fr        #
+#    Updated: 2024/08/27 10:11:08 by pajimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRC 	= 	main.c \
 			parsing.c \
 			utils.c \
 			simulation.c \
-			actions.c \
+			display_eat.c \
 			get_data.c
 
 OBJ		= 	$(SRC:.c=.o)

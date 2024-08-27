@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 14:46:51 by pajimene          #+#    #+#             */
-/*   Updated: 2024/08/25 12:54:03 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/27 10:07:05 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ long	ft_get_time(void)
 }
 
 /*Optimised version of the usleep function*/
-void	ft_usleep(long time)
+void	ft_usleep(long time, t_data *data)
 {
 	long	start_time;
 
 	start_time = ft_get_time();
-	while ((ft_get_time() - start_time) < time)
+	while ((ft_get_time() - start_time) < time && !ft_is_dead(data)
+		&& !ft_is_finished(data))
 		usleep(time / 10);
 }
 

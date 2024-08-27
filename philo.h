@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 16:45:28 by pajimene          #+#    #+#             */
-/*   Updated: 2024/08/25 17:52:16 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/08/27 09:36:07 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 # include <stdbool.h>
 # include <limits.h>
 # include <sys/time.h>
+
+# define BLUE "\033[0;34m"
+# define RED "\033[0;31m"
+# define G "\033[0;32m"
+# define RESET "\033[0m"
 
 # define ARG_ERR "\nWrong input, format must be: ./philo \
 <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep>\
@@ -91,7 +96,7 @@ void			ft_set_end(t_data *data, t_philo *ph);
 
 /*Utils*/
 long			ft_get_time(void);
-void			ft_usleep(long time);
+void			ft_usleep(long time, t_data *data);
 long			ft_atol(char *str);
 int				ft_check_syntax(char *str);
 
