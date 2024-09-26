@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/24 15:00:00 by pajimene          #+#    #+#             */
-/*   Updated: 2024/09/25 20:18:08 by pajimene         ###   ########.fr       */
+/*   Created: 2024/09/26 15:37:33 by pajimene          #+#    #+#             */
+/*   Updated: 2024/09/26 18:33:23 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ meals, the simulation ends properly*/
 int ft_simulation(t_data *data)
 {
 	int i;
-	int status; //why?
+	int status; // why?
 
 	i = -1;
 	data->t_start = ft_get_time();
@@ -32,11 +32,11 @@ int ft_simulation(t_data *data)
 			ft_routine(data, &data->ph[i]);
 	}
 	waitpid(-1, &status, 0);
-	if (status != 0)
-	{
-		while (--i)
-			kill(data->ph[i].pid, SIGKILL);
-	}
+	while (--i)
+		kill(data->ph[i].pid, SIGKILL);
+	if (status == 256)
+		printf(GREEN "%ld everyone finished their meal ! 🎉\n" RESET, \
+			ft_get_time() - data->t_start);
 	if (ft_clear_sem(data))
 		return (1);
 	return (0);
@@ -54,14 +54,9 @@ void ft_routine(t_data *data, t_philo *ph)
 		return ;
 	}
 	if (data->ph_nb == 1)
-	{
-		ft_one_philo(data, ph);
-		return;
-	}
+		return (ft_one_philo(data, ph));
 	while (!ft_is_dead(data))
 	{
-		ft_eat(data, ph);
-		printf("coucou\n");
 		if (ft_is_finished(data))
 		{
 			if (pthread_join(ph->thread, NULL) != 0)
@@ -72,10 +67,7 @@ void ft_routine(t_data *data, t_philo *ph)
 			ft_clear_sem(data);
 			exit(1);
 		}
-		ft_display(data, ph, 'S');
-		ft_usleep(data->t_sleep, data);
-		ft_display(data, ph, 'T');
-		usleep(100);
+		ft_eat_sleep_think(data, ph);
 	}
 	if (pthread_join(ph->thread, NULL) != 0)
 	{
@@ -83,35 +75,32 @@ void ft_routine(t_data *data, t_philo *ph)
 		return ;
 	}
 	ft_clear_sem(data);
-	exit (2);
+	exit(2);
 }
 
 /*Makes sure that philo stops after one dies, and checks the total number of
 meals eaten*/
 void *ft_monitor(void *arg)
 {
-	t_philo	*ph;
-	int i;
-	
+	t_philo *ph;
+	long	time;
+
 	ph = (t_philo *)arg;
 	while (!ft_is_finished(ph->data))
 	{
-		i = -1;
-		while (++i < ph->data->ph_nb && !ft_is_dead(ph->data))
+		sem_wait(ph->data->meal);
+		time = ft_get_time() - ph->t_last_meal;
+		sem_post(ph->data->meal);
+		if (time >= ph->data->t_die)
 		{
-			sem_wait(ph->data->meal);
-			if (ft_get_time() - ph[i].t_last_meal >= ph->data->t_die)
-				ft_set_death(ph->data, ph);
-			sem_post(ph->data->meal);
+			if (!ft_is_dead(ph->data))
+			{
+				ft_display(ph->data, ph, 'D');
+				sem_post(ph->data->dead);
+			}
+			return (NULL);
 			usleep(10);
 		}
-		if (ph->data->is_dead)
-			return (NULL);
-		i = 0;
-		while (i < ph->data->ph_nb && ph->data->meal_nb != -1 && ft_meal_counter(ph->data, ph[i]) >= ph->data->meal_nb)
-			i++;
-		if (i == ph->data->ph_nb)
-			ft_set_end(ph->data, ph);
 	}
 	return (NULL);
 }
@@ -137,13 +126,13 @@ int ft_clear_sem(t_data *data)
 		return (printf(SEM_CLOSE), 1);
 	if (sem_close(data->write) == -1)
 		return (printf(SEM_CLOSE), 1);
-	if (sem_close(data->monitor) == -1)
+	if (sem_close(data->meal_monitor) == -1)
 		return (printf(SEM_CLOSE), 1);
 	sem_unlink("forks");
 	sem_unlink("meal");
 	sem_unlink("dead");
 	sem_unlink("write");
-	sem_unlink("monitor");
+	sem_unlink("meal_monitor");
 	free(data->ph);
 	return (0);
 }

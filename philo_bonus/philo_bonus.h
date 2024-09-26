@@ -6,7 +6,7 @@
 /*   By: pajimene <pajimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 16:45:28 by pajimene          #+#    #+#             */
-/*   Updated: 2024/09/25 19:35:55 by pajimene         ###   ########.fr       */
+/*   Updated: 2024/09/26 18:24:58 by pajimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 /*Color macros*/
 # define BLUE "\033[0;34m"
 # define RED "\033[0;31m"
-# define G "\033[0;32m"
+# define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
 /*Message error macros*/
@@ -56,14 +56,12 @@ typedef struct s_data{
 	long			t_eat;
 	long			t_sleep;
 	long			t_start;
-	int				is_dead;
-	int				is_finished;
 	t_philo			*ph;
 	sem_t			*forks;
 	sem_t			*write;
 	sem_t			*meal;
 	sem_t			*dead;
-	sem_t			*monitor;
+	sem_t			*meal_monitor;
 }		t_data;
 
 /*Each philo is a single thread, which points to the data struct also*/
@@ -72,7 +70,6 @@ typedef struct s_philo{
 	t_data		*data;
 	pid_t		pid;
 	int			id;
-	int			meals_eaten;
 	long		t_last_meal;
 }		t_philo;
 
@@ -92,12 +89,9 @@ void			ft_one_philo(t_data *data, t_philo *ph);
 
 /*Actions*/
 void			ft_display(t_data *data, t_philo *ph, char c);
-void			ft_eat(t_data *data, t_philo *ph);
+void			ft_eat_sleep_think(t_data *data, t_philo *ph);
 int				ft_is_dead(t_data *data);
-void			ft_set_death(t_data *data, t_philo *ph);
 int				ft_is_finished(t_data *data);
-int				ft_meal_counter(t_data *data, t_philo ph);
-void			ft_set_end(t_data *data, t_philo *ph);
 
 /*Utils*/
 long			ft_get_time(void);
